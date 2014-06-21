@@ -1,26 +1,23 @@
-#ifndef SSLSERVER_H
-#define SSLSERVER_H
+#ifndef TCPSERVER_H
+#define TCPSERVER_H
 
-#include <openssl/ssl.h>
-#include <openssl/err.h>
 #include <thread>
 #include <vector>
 #include <unordered_map>
 
-class SSLServer
+class TCPServer
 {
 	SOCKET m_socket = INVALID_SOCKET;
-	SSL_CTX *m_ssl_ctx = nullptr;
 
 	std::thread* m_Taccepter = nullptr;
 	std::thread* m_Tlistener = nullptr;
 
-	std::vector<SSL*> m_clients;
+	std::vector<SOCKET> m_clients;
 	std::unordered_map<DWORD, bool> m_isClientInitalised;
 
 public:
-	SSLServer(WORD port);
-	virtual ~SSLServer();
+	TCPServer(WORD port);
+	virtual ~TCPServer();
 
 	virtual DWORD getClientCount() { return m_clients.size(); }
 
@@ -39,4 +36,4 @@ protected:
 	virtual void OnClientSendData(DWORD cid, void* data, DWORD datasize) = 0;
 };
 
-#endif //SSLSERVER_H
+#endif //TCPSERVER_H

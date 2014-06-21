@@ -2,14 +2,15 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <assert.h>
+#include <WinSock2.h>
 
-#include "SSLServer.h"
+#include "TCPServer.h"
 
-SSLServer::SSLServer(WORD port)
+TCPServer::TCPServer(WORD port)
 {
 	m_socket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	assert(m_socket != INVALID_SOCKET);
-	
+
 	struct sockaddr_in addr;
 	memset(&addr, 0, sizeof(sockaddr_in));
 
@@ -30,48 +31,14 @@ SSLServer::SSLServer(WORD port)
 		abort();
 	}
 
-	OpenSSL_add_all_algorithms();
-	SSL_load_error_strings();
-
-	m_ssl_ctx = SSL_CTX_new(SSLv3_server_method());
-	if (m_ssl_ctx == NULL)
-	{
-		ERR_print_errors_fp(stderr);
-		abort();
-	}
-
-	if (SSL_CTX_load_verify_locations(m_ssl_ctx, "gosredirector.ea.com.crt", "gosredirector.ea.com.key") != 1)
-		ERR_print_errors_fp(stderr);
-
-	if (SSL_CTX_set_default_verify_paths(m_ssl_ctx) != 1)
-		ERR_print_errors_fp(stderr);
-
-	if (SSL_CTX_use_certificate_file(m_ssl_ctx, "gosredirector.ea.com.crt", SSL_FILETYPE_PEM) <= 0)
-	{
-		ERR_print_errors_fp(stderr);
-		abort();
-	}
-
-	if (SSL_CTX_use_PrivateKey_file(m_ssl_ctx, "gosredirector.ea.com.key", SSL_FILETYPE_PEM) <= 0)
-	{
-		ERR_print_errors_fp(stderr);
-		abort();
-	}
-
-	if (!SSL_CTX_check_private_key(m_ssl_ctx))
-	{
-		fprintf(stderr, "Private key does not match the public certificate\n");
-		abort();
-	}
-
-	m_Taccepter = new std::thread(&SSLServer::Accepter, this);
+	m_Taccepter = new std::thread(&TCPServer::Accepter, this);
 	m_Taccepter->detach();
 
-	m_Tlistener = new std::thread(&SSLServer::Listener, this);
+	m_Tlistener = new std::thread(&TCPServer::Listener, this);
 	m_Tlistener->detach();
 }
 
-SSLServer::~SSLServer()
+TCPServer::~TCPServer()
 {
 	if (m_Taccepter != nullptr)
 	{
@@ -86,31 +53,30 @@ SSLServer::~SSLServer()
 	}
 
 	closesocket(m_socket);
-	SSL_CTX_free(m_ssl_ctx);
 }
 
-char* SSLServer::getClientIP(DWORD cid)
+char* TCPServer::getClientIP(DWORD cid)
 {
 	SOCKADDR_IN clientaddr;
 	int len = sizeof(clientaddr);
-	getpeername(SSL_get_fd(m_clients[cid]), (sockaddr*)&clientaddr, &len);
+	getpeername(m_clients[cid], (sockaddr*)&clientaddr, &len);
 	return inet_ntoa(clientaddr.sin_addr);
 }
 
-WORD SSLServer::getClientPort(DWORD cid)
+WORD TCPServer::getClientPort(DWORD cid)
 {
 	SOCKADDR_IN clientaddr;
 	int len = sizeof(clientaddr);
-	getpeername(SSL_get_fd(m_clients[cid]), (sockaddr*)&clientaddr, &len);
+	getpeername(m_clients[cid], (sockaddr*)&clientaddr, &len);
 	return ntohs(clientaddr.sin_port);
 }
 
-int SSLServer::SendClientData(DWORD cid, void* data, DWORD datasize)
+int TCPServer::SendClientData(DWORD cid, void* data, DWORD datasize)
 {
-	return SSL_write(m_clients[cid], data, datasize);
+	return send(m_clients[cid], (char*) data, datasize, 0);
 }
 
-void SSLServer::Accepter()
+void TCPServer::Accepter()
 {
 	while (true)
 	{
@@ -124,17 +90,8 @@ void SSLServer::Accepter()
 			continue;
 		}
 
-		SSL *ssl = SSL_new(m_ssl_ctx);
-		SSL_set_fd(ssl, socket);
-
-		if (SSL_accept(ssl) == -1)
-		{
-			ERR_print_errors_fp(stderr);
-			abort();
-		}
-
 		m_isClientInitalised[m_clients.size()] = false;
-		m_clients.push_back(ssl);
+		m_clients.push_back(socket);
 
 		OnClientConnect(m_clients.size() - 1);
 
@@ -142,7 +99,7 @@ void SSLServer::Accepter()
 	}
 }
 
-void SSLServer::Listener()
+void TCPServer::Listener()
 {
 	fd_set read_set;
 
@@ -158,8 +115,8 @@ void SSLServer::Listener()
 		FD_ZERO(&read_set);
 
 		for (DWORD i = 0; i < m_clients.size(); i++)
-			if (m_isClientInitalised[i] && SSL_is_init_finished(m_clients[i]))
-				FD_SET(SSL_get_fd(m_clients[i]), &read_set);
+			if (m_isClientInitalised[i])
+				FD_SET(m_clients[i], &read_set);
 
 		if (read_set.fd_count == 0)
 			continue;
@@ -177,19 +134,17 @@ void SSLServer::Listener()
 
 		for (DWORD i = 0; i < m_clients.size(); i++)
 		{
-			if (FD_ISSET(SSL_get_fd(m_clients[i]), &read_set))
+			if (FD_ISSET(m_clients[i], &read_set))
 			{
 				char * rbuf = new char[10240];
 				memset(rbuf, 0, 10240);
-				int recved = SSL_read(m_clients[i], rbuf, 10240);
+				int recved = recv(m_clients[i], rbuf, 10240, 0);
 
 				if (recved <= 0)
 				{
 					OnClientDisconnect(i);
 
-					//SOCKET client = SSL_get_fd(m_clients[i]);
-					SSL_free(m_clients[i]);
-					//closesocket(client);
+					closesocket(m_clients[i]);
 
 					m_clients.erase(m_clients.begin() + i, m_clients.begin() + i + 1); //pop(i); -.-"
 

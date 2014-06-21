@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlaseProxy", "BlaseProxy\Bl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SSL", "SSL\SSL.vcxproj", "{1713EE0A-4B4E-4A59-B26E-12448A5A41E2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tdf", "Tdf\Tdf.vcxproj", "{DEFAC28E-6DE7-4E1F-A3B1-608C8BD804F7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCP", "TCP\TCP.vcxproj", "{81BDAE4F-FC64-4046-863D-AA5CFC3B75E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +25,14 @@ Global
 		{1713EE0A-4B4E-4A59-B26E-12448A5A41E2}.Debug|Win32.Build.0 = Debug|Win32
 		{1713EE0A-4B4E-4A59-B26E-12448A5A41E2}.Release|Win32.ActiveCfg = Release|Win32
 		{1713EE0A-4B4E-4A59-B26E-12448A5A41E2}.Release|Win32.Build.0 = Release|Win32
+		{DEFAC28E-6DE7-4E1F-A3B1-608C8BD804F7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DEFAC28E-6DE7-4E1F-A3B1-608C8BD804F7}.Debug|Win32.Build.0 = Debug|Win32
+		{DEFAC28E-6DE7-4E1F-A3B1-608C8BD804F7}.Release|Win32.ActiveCfg = Release|Win32
+		{DEFAC28E-6DE7-4E1F-A3B1-608C8BD804F7}.Release|Win32.Build.0 = Release|Win32
+		{81BDAE4F-FC64-4046-863D-AA5CFC3B75E6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{81BDAE4F-FC64-4046-863D-AA5CFC3B75E6}.Debug|Win32.Build.0 = Debug|Win32
+		{81BDAE4F-FC64-4046-863D-AA5CFC3B75E6}.Release|Win32.ActiveCfg = Release|Win32
+		{81BDAE4F-FC64-4046-863D-AA5CFC3B75E6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

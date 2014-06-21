@@ -93,9 +93,9 @@ void SSLClient::Listener()
 {
 	while (this != nullptr && m_ssl != nullptr)
 	{
-		char * rbuf = new char[1024];
-		memset(rbuf, 0, 1024);
-		int recved = SSL_read(m_ssl, rbuf, 1024);
+		char * rbuf = new char[10240];
+		memset(rbuf, 0, 10240);
+		int recved = SSL_read(m_ssl, rbuf, 10240);
 
 		if (recved <= 0)
 		{
