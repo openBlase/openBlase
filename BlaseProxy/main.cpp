@@ -59,13 +59,13 @@ void LogTdf(Tdf* pTdf, char* spacer = "\0")
 	}
 	case TDF_VECTOR2D:
 	{
-		QWORD * vals = ((TdfVector2D *)pTdf)->getValues();
+		DWORD * vals = ((TdfVector2D *)pTdf)->getValues();
 		printf("{0x%X, 0x%X}\n", vals[0], vals[1]);
 		break;
 	}
 	case TDF_VECTOR3D:
 	{
-		QWORD * vals = ((TdfVector3D *)pTdf)->getValues();
+		DWORD * vals = ((TdfVector3D *)pTdf)->getValues();
 		printf("{0x%X, 0x%X, 0x%X}\n", vals[0], vals[1], vals[2]);
 		break;
 	}

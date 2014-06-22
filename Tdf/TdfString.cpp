@@ -35,8 +35,6 @@ TdfString* TdfString::fromMemory(void* buffer, DWORD * size)
 	ret->m_type = (TdfTypes)Header->Type;
 	DWORD len = (DWORD)ret->DecompressInteger(buffer, &offset);
 
-	printf("len: %i\n", len);
-
 	ret->m_value = new char[len];
 	memcpy(ret->m_value, (BYTE*)buffer + offset, len);
 	offset += len;

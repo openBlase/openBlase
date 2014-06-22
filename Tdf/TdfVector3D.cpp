@@ -10,11 +10,11 @@ TdfVector3D::TdfVector3D() : Tdf()
 }
 
 
-TdfVector3D::TdfVector3D(DWORD Label, TdfTypes Type, QWORD* Values) : Tdf()
+TdfVector3D::TdfVector3D(DWORD Label, TdfTypes Type, DWORD* Values) : Tdf()
 {
 	m_label = Label;
 	m_type = Type;
-	memcpy(m_values, Values, sizeof(QWORD) * 3);
+	memcpy(m_values, Values, sizeof(DWORD) * 3);
 }
 
 TdfVector3D::~TdfVector3D()

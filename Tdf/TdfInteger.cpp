@@ -10,7 +10,7 @@ TdfInteger::TdfInteger() : Tdf()
 }
 
 
-TdfInteger::TdfInteger(DWORD Label, TdfTypes Type, QWORD Value) : Tdf()
+TdfInteger::TdfInteger(DWORD Label, TdfTypes Type, DWORD Value) : Tdf()
 {
 	m_label = Label;
 	m_type = Type;

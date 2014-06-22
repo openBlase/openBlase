@@ -45,6 +45,16 @@ Tdf* Tdf::fromMemory(void* buffer, DWORD * size)
 	return nullptr;
 }
 
+DWORD Tdf::CompressLabel(DWORD Label)
+{
+	DWORD ret = 0;
+
+	for (int i = 0; i < 4; ++i)
+		ret |= (0x20 | ((((BYTE *)&Label)[i]) & 0x1F)) << ((3 - i) * 6);
+
+	return _byteswap_ulong(ret) >> 8;
+}
+
 DWORD Tdf::DecompressLabel(DWORD Label)
 {
 	Label = _byteswap_ulong(Label) >> 8;
@@ -61,23 +71,37 @@ DWORD Tdf::DecompressLabel(DWORD Label)
 	return ret;
 }
 
-QWORD Tdf::DecompressInteger(void* data, DWORD * offset)
+DWORD Tdf::CompressInteger(DWORD integer)
 {
-	BYTE* buff = new BYTE[8];
-	memset(buff, 0, 8);
+	DWORD result = 0x80 | (integer & 0x3F);
 
-	for (int i = 0; i < 8; ++i)
+	for (int i = 1; i < 4; i++)
 	{
-		buff[i] = *((BYTE *)data + *offset); ++*offset;
+		if (integer >> (i * 7 - 1) == 0)
+			break;
 
+		((BYTE *)&result)[i] = 0x80 | ((integer >> (i * 7 - 1)) & 0x7F);
+	}
+
+	return result;
+}
+
+DWORD Tdf::DecompressInteger(void* data, DWORD * offset)
+{
+	BYTE* buff = (BYTE *)data + *offset;
+
+	DWORD res = buff[0] & 0x3F; ++*offset;
+
+	if (buff[0] < 0x80)
+		return res;
+
+	for (int i = 1; i < 8; i++)
+	{
+		res |= (DWORD)(buff[i] & 0x7F) << (i * 7 - 1); ++*offset;
+		
 		if (buff[i] < 0x80)
 			break;
 	}
 
-	DWORD result = buff[0] & 0x3F;
-
-	for (int i = 1; i < 8; i++)
-		result |= (DWORD)(buff[i] & 0x7F) << (i * 7 - 1);
-
-	return result;
+	return res;
 }

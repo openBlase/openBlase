@@ -1,8 +1,6 @@
 #ifndef TDF_H
 #define TDF_H
 
-typedef unsigned __int64       QWORD;
-
 enum TdfTypes : BYTE
 {
 	TDF_INTEGER_1,
@@ -61,8 +59,10 @@ public:
 	virtual void setType(TdfTypes Type) { m_type = Type; }
 
 protected:
+	virtual DWORD CompressLabel(DWORD Label);
 	virtual DWORD DecompressLabel(DWORD Label);
-	virtual QWORD DecompressInteger(void* data, DWORD * offset);
+	virtual DWORD CompressInteger(DWORD integer);
+	virtual DWORD DecompressInteger(void* data, DWORD * offset);
 };
 
 #include "TdfInteger.h"

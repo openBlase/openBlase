@@ -10,7 +10,7 @@ TdfIntegerList::TdfIntegerList() : Tdf()
 }
 
 
-TdfIntegerList::TdfIntegerList(DWORD Label, TdfTypes Type, std::vector<QWORD> Values) : Tdf()
+TdfIntegerList::TdfIntegerList(DWORD Label, TdfTypes Type, std::vector<DWORD> Values) : Tdf()
 {
 	m_label = Label;
 	m_type = Type;
@@ -34,7 +34,7 @@ TdfIntegerList* TdfIntegerList::fromMemory(void* buffer, DWORD * size)
 	ret->m_type = (TdfTypes)Header->Type;
 
 	DWORD count = (DWORD)ret->DecompressInteger(buffer, &offset);
-	for (QWORD i = 0; i < count; i++)
+	for (DWORD i = 0; i < count; i++)
 		ret->m_values.push_back(ret->DecompressInteger(buffer, &offset));
 
 	if (size)
