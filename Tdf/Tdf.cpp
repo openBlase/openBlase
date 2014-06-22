@@ -47,26 +47,18 @@ Tdf* Tdf::fromMemory(void* buffer, DWORD * size)
 
 DWORD Tdf::DecompressLabel(DWORD Label)
 {
-	BYTE* ret = new BYTE[4];
+	Label = _byteswap_ulong(Label) >> 8;
 
-	ret[0] = ((Label & 0x30) >> 2);
-	ret[0] |= ((Label & 0x0C) >> 2);
-	ret[0] |= ((Label & 0x40) >> 2);
-	ret[0] |= ((Label & 0x80) >> 1);
+	DWORD ret = 0;
 
-	ret[1] = ((Label & 0x02) << 5);
-	ret[1] |= ((Label & 0x01) << 4);
-	ret[1] |= (((Label >> 8) & 0xF0) >> 4);
+	for (int i = 0; i < 4; ++i)
+	{
+		DWORD j = (Label >> (3 - i) * 6) & 0x3F;
+		if (j > 0)
+			((BYTE *)&ret)[i] = (BYTE)(0x40 | (j & 0x1F));
+	}
 
-	ret[2] = (((Label >> 8) & 0x08) << 3);
-	ret[2] |= (((Label >> 8) & 0x04) << 2);
-	ret[2] |= (((Label >> 8) & 0x03) << 2);
-	ret[2] |= (((Label >> 16) & 0xC0) >> 6);
-
-	ret[3] = (((Label >> 16) & 0x20) << 1);
-	ret[3] |= (((Label >> 16) & 0x1F));
-
-	return *(DWORD*)ret;
+	return ret;
 }
 
 QWORD Tdf::DecompressInteger(void* data, DWORD * offset)
@@ -82,14 +74,10 @@ QWORD Tdf::DecompressInteger(void* data, DWORD * offset)
 			break;
 	}
 
-	int currshift = 6;
 	DWORD result = buff[0] & 0x3F;
 
 	for (int i = 1; i < 8; i++)
-	{
-		result |= (DWORD)(buff[i] & 0x7F) << currshift;
-		currshift += 7;
-	}
+		result |= (DWORD)(buff[i] & 0x7F) << (i * 7 - 1);
 
 	return result;
 }

@@ -1,8 +1,6 @@
 #ifndef TCPCLIENT_H
 #define TCPCLIENT_H
 
-#include <openssl/ssl.h>
-#include <openssl/err.h>
 #include <thread>
 
 typedef void(*t_OnServerSendData)(void* data, DWORD datasize);

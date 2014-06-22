@@ -10,12 +10,11 @@ TdfVector2D::TdfVector2D() : Tdf()
 }
 
 
-TdfVector2D::TdfVector2D(DWORD Label, TdfTypes Type, QWORD x, QWORD y) : Tdf()
+TdfVector2D::TdfVector2D(DWORD Label, TdfTypes Type, QWORD* Values) : Tdf()
 {
 	m_label = Label;
 	m_type = Type;
-	m_x = x;
-	m_y = y;
+	memcpy(m_values, Values, sizeof(QWORD) * 2);
 }
 
 TdfVector2D::~TdfVector2D()
@@ -33,8 +32,8 @@ TdfVector2D* TdfVector2D::fromMemory(void* buffer, DWORD * size)
 
 	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
 	ret->m_type = (TdfTypes)Header->Type;
-	ret->m_x = ret->DecompressInteger(buffer, &offset);
-	ret->m_y = ret->DecompressInteger(buffer, &offset);
+	ret->m_values[0] = ret->DecompressInteger(buffer, &offset);
+	ret->m_values[1] = ret->DecompressInteger(buffer, &offset);
 
 	if (size)
 		*size = offset;

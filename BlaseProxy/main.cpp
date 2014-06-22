@@ -43,9 +43,32 @@ void LogTdf(Tdf* pTdf, char* spacer = "\0")
 	}
 	case TDF_LIST:
 	case TDF_DOUBLE_LIST:
+	{
+		printf("TODO..\n");
+		break;
+	}
 	case TDF_INTEGER_LIST:
+	{
+		for (DWORD i = 0; i < ((TdfIntegerList *)pTdf)->getValues().size(); ++i)
+			if (i == ((TdfIntegerList *)pTdf)->getValues().size() - 1)
+				printf("0x%X\n", ((TdfIntegerList *)pTdf)->getValues()[i]);
+			else
+				printf("0x%X, ", ((TdfIntegerList *)pTdf)->getValues()[i]);
+
+		break;
+	}
 	case TDF_VECTOR2D:
+	{
+		QWORD * vals = ((TdfVector2D *)pTdf)->getValues();
+		printf("{0x%X, 0x%X}\n", vals[0], vals[1]);
+		break;
+	}
 	case TDF_VECTOR3D:
+	{
+		QWORD * vals = ((TdfVector3D *)pTdf)->getValues();
+		printf("{0x%X, 0x%X, 0x%X}\n", vals[0], vals[1], vals[2]);
+		break;
+	}
 	default:
 		printf("Unsupported type: %i - LogTdf\n", pTdf->getType());
 	}
@@ -141,7 +164,7 @@ void LogBlasePacket(void* data, DWORD datasize)
 	printf("Tdfs:\n");
 
 	offset = 0;
-	while (offset < len - 4)
+	while (offset < len)
 	{
 		DWORD offset2 = 0;
 

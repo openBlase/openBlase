@@ -10,13 +10,11 @@ TdfVector3D::TdfVector3D() : Tdf()
 }
 
 
-TdfVector3D::TdfVector3D(DWORD Label, TdfTypes Type, QWORD x, QWORD y, QWORD z) : Tdf()
+TdfVector3D::TdfVector3D(DWORD Label, TdfTypes Type, QWORD* Values) : Tdf()
 {
 	m_label = Label;
 	m_type = Type;
-	m_x = x;
-	m_y = y;
-	m_z = z;
+	memcpy(m_values, Values, sizeof(QWORD) * 3);
 }
 
 TdfVector3D::~TdfVector3D()
@@ -34,9 +32,9 @@ TdfVector3D* TdfVector3D::fromMemory(void* buffer, DWORD * size)
 
 	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
 	ret->m_type = (TdfTypes)Header->Type;
-	ret->m_x = ret->DecompressInteger(buffer, &offset);
-	ret->m_y = ret->DecompressInteger(buffer, &offset);
-	ret->m_z = ret->DecompressInteger(buffer, &offset);
+	ret->m_values[0] = ret->DecompressInteger(buffer, &offset);
+	ret->m_values[1] = ret->DecompressInteger(buffer, &offset);
+	ret->m_values[2] = ret->DecompressInteger(buffer, &offset);
 
 	if (size)
 		*size = offset;

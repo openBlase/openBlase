@@ -19,8 +19,8 @@ public:
 
 	virtual DWORD toMemory(void* buffer, DWORD size);
 
-	std::vector<QWORD> getValue() { return m_values; }
-	void setValue(std::vector<QWORD> Values) { m_values = Values; }
+	std::vector<QWORD> getValues() { return m_values; }
+	void setValues(std::vector<QWORD> Values) { m_values = Values; }
 };
 
 #endif //TDFINTEGERLIST_H

@@ -26,7 +26,7 @@ enum TdfTypes : BYTE
 struct TdfHeader
 {
 	DWORD CompressedLabel : 24;
-	DWORD Type : 8; //Fuck 3 byte vars -.-" ¡(^^^)
+	DWORD Type : 8; //Fuck 3 byte vars -.-" (^^^)
 };
 
 #pragma pack(pop)

@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <assert.h>
+#include <WinSock2.h>
 
 #include "TCPClient.h"
 
