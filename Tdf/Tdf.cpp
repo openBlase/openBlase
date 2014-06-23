@@ -28,16 +28,16 @@ Tdf* Tdf::fromPacket(BlazeInStream* stream)
 		return TdfString::fromPacket(stream);
 	case TDF_STRUCT:
 		return TdfStruct::fromPacket(stream);
-	/*case TDF_LIST:
-		return TdfList::fromPacket(buffer, size);
+	case TDF_LIST:
+		return TdfList::fromPacket(stream);
 	case TDF_DOUBLE_LIST:
-		return TdfDoubleList::fromPacket(buffer, size);
+		return TdfDoubleList::fromPacket(stream);
 	case TDF_INTEGER_LIST:
-		return TdfIntegerList::fromPacket(buffer, size);
+		return TdfIntegerList::fromPacket(stream);
 	case TDF_VECTOR2D:
-		return TdfVector2D::fromPacket(buffer, size);
+		return TdfVector2D::fromPacket(stream);
 	case TDF_VECTOR3D:
-		return TdfVector3D::fromPacket(buffer, size);*/
+		return TdfVector3D::fromPacket(stream);
 	default:
 		printf("Unsupported type: %i\n", Header->Type);
 	}
@@ -71,7 +71,7 @@ DWORD Tdf::DecompressLabel(DWORD Label)
 	return ret;
 }
 
-DWORD Tdf::CompressInteger(DWORD integer)
+/*DWORD Tdf::CompressInteger(DWORD integer)
 {
 	if (integer < 0x40)
 		return integer;
@@ -107,4 +107,4 @@ DWORD Tdf::DecompressInteger(void* data, DWORD * offset)
 	}
 
 	return res;
-}
+}*/

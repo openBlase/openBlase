@@ -24,17 +24,15 @@ TdfList::~TdfList()
 
 TdfList* TdfList::fromPacket(BlazeInStream* stream)
 {
-	/*DWORD offset = 0;
-
-	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
+	TdfHeader Header = stream->Read<TdfHeader>();
 
 	TdfList* ret = new TdfList();
 
-	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
-	ret->m_type = (TdfTypes)Header->Type;
+	ret->m_label = ret->DecompressLabel(Header.CompressedLabel);
+	ret->m_type = (TdfTypes)Header.Type;
 
-	ret->m_subType = (TdfTypes)*((BYTE *)buffer + offset); ++offset;
-	DWORD count = (DWORD)ret->DecompressInteger(buffer, &offset);
+	ret->m_subType = (TdfTypes)stream->Read<BYTE>();
+	DWORD count = stream->ReadCompressedInt();
 	for (DWORD i = 0; i < count; i++)
 	{
 		switch (ret->m_subType)
@@ -43,16 +41,15 @@ TdfList* TdfList::fromPacket(BlazeInStream* stream)
 		case TDF_INTEGER_2:
 		case TDF_INTEGER_3:
 		{
-			ret->m_values.push_back(ret->DecompressInteger(buffer, &offset));
+			ret->m_values.push_back(stream->ReadCompressedInt());
 			break;
 		}
 		case TDF_STRING:
 		{
-			DWORD len = (DWORD)ret->DecompressInteger(buffer, &offset);
+			DWORD len = stream->ReadCompressedInt();
 
 			char* buf = new char[len];
-			memcpy(buf, (BYTE *)buffer + offset, len);
-			offset += len;
+			memcpy(buf, stream->ReadP(len), len);
 
 			ret->m_values.push_back((DWORD) buf);
 			break;
@@ -61,16 +58,15 @@ TdfList* TdfList::fromPacket(BlazeInStream* stream)
 		{
 			std::vector<Tdf*>* vec = new std::vector<Tdf*>;
 
-			while (*((BYTE *)buffer + offset) != 0)
+			while (stream->Read<BYTE>() != 0)
 			{
-				if (*((BYTE *)buffer + offset) == 2) //WTF?!
-					++offset;
+				stream->seek(1, SEEK_BACK);
+				if (stream->Read<BYTE>() != 2) //WTF?!
+					stream->seek(1, SEEK_BACK);
 
 				DWORD len = 0;
-				vec->push_back(Tdf::fromPacket((BYTE *)buffer + offset, &len));
-				offset += len;
+				vec->push_back(Tdf::fromPacket(stream));
 			}
-			++offset;
 
 			ret->m_values.push_back((DWORD)vec);
 			break;
@@ -80,12 +76,7 @@ TdfList* TdfList::fromPacket(BlazeInStream* stream)
 		}
 	}
 
-	if (size)
-		*size = offset;
-
-	return ret;*/
-
-	return nullptr;
+	return ret;
 }
 
 DWORD TdfList::toPacket(void* buffer, DWORD size)

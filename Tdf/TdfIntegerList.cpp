@@ -24,23 +24,18 @@ TdfIntegerList::~TdfIntegerList()
 
 TdfIntegerList* TdfIntegerList::fromPacket(BlazeInStream* stream)
 {
-	/*DWORD offset = 0;
-
-	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
+	TdfHeader Header = stream->Read<TdfHeader>();
 
 	TdfIntegerList* ret = new TdfIntegerList();
 
-	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
-	ret->m_type = (TdfTypes)Header->Type;
+	ret->m_label = ret->DecompressLabel(Header.CompressedLabel);
+	ret->m_type = (TdfTypes)Header.Type;
 
-	DWORD count = (DWORD)ret->DecompressInteger(buffer, &offset);
+	DWORD count = stream->ReadCompressedInt();
 	for (DWORD i = 0; i < count; i++)
-		ret->m_values.push_back(ret->DecompressInteger(buffer, &offset));
+		ret->m_values.push_back(stream->ReadCompressedInt());
 
-	if (size)
-		*size = offset;
-
-	return ret;*/
+	return ret;
 
 	return nullptr;
 }

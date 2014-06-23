@@ -508,7 +508,7 @@ int main(int argc, char* argv[])
 
 	g_BlazeServer = new BlazeServer(42127);
 
-	//g_MasterServer = new MasterServer(42129);
+	g_MasterServer = new MasterServer(42129);
 
 	while (true); //main loop
 

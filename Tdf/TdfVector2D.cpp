@@ -24,23 +24,17 @@ TdfVector2D::~TdfVector2D()
 
 TdfVector2D* TdfVector2D::fromPacket(BlazeInStream* stream)
 {
-	/*DWORD offset = 0;
-
-	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
+	TdfHeader Header = stream->Read<TdfHeader>();
 
 	TdfVector2D* ret = new TdfVector2D();
 
-	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
-	ret->m_type = (TdfTypes)Header->Type;
-	ret->m_values[0] = ret->DecompressInteger(buffer, &offset);
-	ret->m_values[1] = ret->DecompressInteger(buffer, &offset);
+	ret->m_label = ret->DecompressLabel(Header.CompressedLabel);
+	ret->m_type = (TdfTypes)Header.Type;
 
-	if (size)
-		*size = offset;
+	ret->m_values[0] = stream->ReadCompressedInt();
+	ret->m_values[1] = stream->ReadCompressedInt();
 
-	return ret;*/
-
-	return nullptr;
+	return ret;
 }
 
 DWORD TdfVector2D::toPacket(void* buffer, DWORD size)

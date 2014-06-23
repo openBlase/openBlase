@@ -63,8 +63,8 @@ public:
 protected:
 	virtual DWORD CompressLabel(DWORD Label);
 	virtual DWORD DecompressLabel(DWORD Label);
-	virtual DWORD CompressInteger(DWORD integer);
-	virtual DWORD DecompressInteger(void* data, DWORD * offset);
+	/*virtual DWORD CompressInteger(DWORD integer);
+	virtual DWORD DecompressInteger(void* data, DWORD * offset);*/
 };
 
 #include "TdfInteger.h"
