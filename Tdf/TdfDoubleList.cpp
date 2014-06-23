@@ -44,7 +44,7 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 		case TDF_INTEGER_2:
 		case TDF_INTEGER_3:
 		{
-			ret->m_values1_int.push_back(ret->DecompressInteger(buffer, &offset));
+			ret->m_values1.push_back(ret->DecompressInteger(buffer, &offset));
 			break;
 		}
 		case TDF_STRING:
@@ -55,12 +55,12 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 			memcpy(buf, (BYTE *)buffer + offset, len);
 			offset += len;
 
-			ret->m_values1_string.push_back(buf);
+			ret->m_values1.push_back((DWORD) buf);
 			break;
 		}
 		case TDF_STRUCT:
 		{
-			std::vector<Tdf*> vec;
+			std::vector<Tdf*>* vec = new std::vector<Tdf*>;
 
 			while (*((BYTE *)buffer + offset) != 0)
 			{
@@ -68,12 +68,12 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 					++offset;
 
 				DWORD len = 0;
-				vec.push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
+				vec->push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
 				offset += len;
 			}
 			++offset;
 
-			ret->m_values1_struct.push_back(vec);
+			ret->m_values1.push_back((DWORD) vec);
 			break;
 		}
 		default:
@@ -86,7 +86,7 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 		case TDF_INTEGER_2:
 		case TDF_INTEGER_3:
 		{
-			ret->m_values2_int.push_back(ret->DecompressInteger(buffer, &offset));
+			ret->m_values2.push_back(ret->DecompressInteger(buffer, &offset));
 			break;
 		}
 		case TDF_STRING:
@@ -97,12 +97,12 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 			memcpy(buf, (BYTE *)buffer + offset, len);
 			offset += len;
 
-			ret->m_values2_string.push_back(buf);
+			ret->m_values2.push_back((DWORD) buf);
 			break;
 		}
 		case TDF_STRUCT:
 		{
-			std::vector<Tdf*> vec;
+			std::vector<Tdf*>* vec = new std::vector<Tdf*>;
 
 			while (*((BYTE *)buffer + offset) != 0)
 			{
@@ -110,12 +110,12 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 					++offset;
 
 				DWORD len = 0;
-				vec.push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
+				vec->push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
 				offset += len;
 			}
 			++offset;
 
-			ret->m_values2_struct.push_back(vec);
+			ret->m_values2.push_back((DWORD) vec);
 			break;
 		}
 		default:

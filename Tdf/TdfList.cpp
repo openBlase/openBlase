@@ -43,7 +43,7 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 		case TDF_INTEGER_2:
 		case TDF_INTEGER_3:
 		{
-			ret->m_values_int.push_back(ret->DecompressInteger(buffer, &offset));
+			ret->m_values.push_back(ret->DecompressInteger(buffer, &offset));
 			break;
 		}
 		case TDF_STRING:
@@ -54,12 +54,12 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 			memcpy(buf, (BYTE *)buffer + offset, len);
 			offset += len;
 
-			ret->m_values_string.push_back(buf);
+			ret->m_values.push_back((DWORD) buf);
 			break;
 		}
 		case TDF_STRUCT:
 		{
-			std::vector<Tdf*> vec;
+			std::vector<Tdf*>* vec = new std::vector<Tdf*>;
 
 			while (*((BYTE *)buffer + offset) != 0)
 			{
@@ -67,12 +67,12 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 					++offset;
 
 				DWORD len = 0;
-				vec.push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
+				vec->push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
 				offset += len;
 			}
 			++offset;
 
-			ret->m_values_struct.push_back(vec);
+			ret->m_values.push_back((DWORD)vec);
 			break;
 		}
 		default:

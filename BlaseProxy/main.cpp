@@ -74,12 +74,12 @@ void LogTdf(Tdf* pTdf, char* spacer = "\0")
 			char* new_spacer = new char[strlen(spacer) + 4];
 			sprintf_s(new_spacer, strlen(spacer) + 4, "%s\t\t", spacer);
 
-			for (DWORD i = 0; i < ((TdfList *)pTdf)->getValues<std::vector<Tdf*>>().size(); ++i)
+			for (DWORD i = 0; i < ((TdfList *)pTdf)->getValues<std::vector<Tdf*>*>().size(); ++i)
 			{
 				printf("%s\tEntry %i:\n", spacer, i + 1);
 
-				for (DWORD j = 0; j < ((TdfList *)pTdf)->getValues<std::vector<Tdf*>>()[i].size(); ++j)
-					LogTdf(((TdfList *)pTdf)->getValues<std::vector<Tdf*>>()[i][j], new_spacer);
+				for (DWORD j = 0; j < ((TdfList *)pTdf)->getValues<std::vector<Tdf*>*>()[i]->size(); ++j)
+					LogTdf(((TdfList *)pTdf)->getValues<std::vector<Tdf*>*>()[i]->at(j), new_spacer);
 			}
 
 			delete[] new_spacer;
@@ -123,12 +123,12 @@ void LogTdf(Tdf* pTdf, char* spacer = "\0")
 			char* new_spacer = new char[strlen(spacer) + 4];
 			sprintf_s(new_spacer, strlen(spacer) + 4, "%s\t\t", spacer);
 
-			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>>().size(); ++i)
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>*>().size(); ++i)
 			{
 				printf("%s\tEntry %i:\n", spacer, i + 1);
 
-				for (DWORD j = 0; j < ((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>>()[i].size(); ++j)
-					LogTdf(((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>>()[i][j], new_spacer);
+				for (DWORD j = 0; j < ((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>*>()[i]->size(); ++j)
+					LogTdf(((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>*>()[i]->at(j), new_spacer);
 			}
 
 			delete[] new_spacer;
@@ -168,12 +168,12 @@ void LogTdf(Tdf* pTdf, char* spacer = "\0")
 			char* new_spacer = new char[strlen(spacer) + 4];
 			sprintf_s(new_spacer, strlen(spacer) + 4, "%s\t\t", spacer);
 
-			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>>().size(); ++i)
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>*>().size(); ++i)
 			{
 				printf("%s\tEntry %i:\n", spacer, i + 1);
 
-				for (DWORD j = 0; j < ((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>>()[i].size(); ++j)
-					LogTdf(((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>>()[i][j], new_spacer);
+				for (DWORD j = 0; j < ((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>*>()[i]->size(); ++j)
+					LogTdf(((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>*>()[i]->at(j), new_spacer);
 			}
 
 			delete[] new_spacer;

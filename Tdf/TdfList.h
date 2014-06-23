@@ -9,9 +9,7 @@ class TdfList : public Tdf
 {
 private:
 	TdfTypes m_subType = TDF_INVALID;
-	std::vector<DWORD> m_values_int;
-	std::vector<char*> m_values_string;
-	std::vector<std::vector<Tdf*>> m_values_struct;
+	std::vector<DWORD> m_values;
 
 public:
 	TdfList();
@@ -28,17 +26,7 @@ public:
 	template<typename T>
 	std::vector<T> getValues()
 	{
-		switch (m_subType)
-		{
-		case TDF_INTEGER_1:
-		case TDF_INTEGER_2:
-		case TDF_INTEGER_3:
-			return *(std::vector<T>*)&m_values_int;
-		case TDF_STRING:
-			return *(std::vector<T>*)&m_values_string;
-		case TDF_STRUCT:
-			return *(std::vector<T>*)&m_values_struct;
-		}
+		return *(std::vector<T>*)&m_values;
 	}
 	/*template<typename T>
 	void setValues(T Values)
