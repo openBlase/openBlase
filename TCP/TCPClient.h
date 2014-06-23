@@ -3,8 +3,6 @@
 
 #include <thread>
 
-typedef void(*t_OnServerSendData)(void* data, DWORD datasize);
-
 class TCPClient
 {
 	SOCKET m_socket = INVALID_SOCKET;

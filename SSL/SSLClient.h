@@ -5,8 +5,6 @@
 #include <openssl/err.h>
 #include <thread>
 
-typedef void(*t_OnServerSendData)(void* data, DWORD datasize);
-
 class SSLClient
 {
 	SSL_CTX *m_ssl_ctx = nullptr;
