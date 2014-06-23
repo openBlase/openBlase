@@ -73,6 +73,9 @@ DWORD Tdf::DecompressLabel(DWORD Label)
 
 DWORD Tdf::CompressInteger(DWORD integer)
 {
+	if (integer < 0x40)
+		return integer;
+
 	DWORD result = 0x80 | (integer & 0x3F);
 
 	for (int i = 1; i < 4; i++)

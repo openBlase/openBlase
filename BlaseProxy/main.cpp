@@ -42,9 +42,146 @@ void LogTdf(Tdf* pTdf, char* spacer = "\0")
 		break;
 	}
 	case TDF_LIST:
+	{
+		switch (((TdfList *)pTdf)->getSubType())
+		{
+		case TDF_INTEGER_1:
+		case TDF_INTEGER_2:
+		case TDF_INTEGER_3:
+		{
+			for (DWORD i = 0; i < ((TdfList *)pTdf)->getValues<DWORD>().size(); ++i)
+				if (i == ((TdfList *)pTdf)->getValues<DWORD>().size() - 1)
+					printf("0x%X\n", ((TdfList *)pTdf)->getValues<DWORD>()[i]);
+				else
+					printf("0x%X, ", ((TdfList *)pTdf)->getValues<DWORD>()[i]);
+
+			break;
+		}
+		case TDF_STRING:
+		{
+			for (DWORD i = 0; i < ((TdfList *)pTdf)->getValues<char*>().size(); ++i)
+				if (i == ((TdfList *)pTdf)->getValues<char*>().size() - 1)
+					printf("%s\n", ((TdfList *)pTdf)->getValues<char*>()[i]);
+				else
+					printf("%s, ", ((TdfList *)pTdf)->getValues<char*>()[i]);
+
+			break;
+		}
+		case TDF_STRUCT:
+		{
+			printf("\n");
+
+			char* new_spacer = new char[strlen(spacer) + 4];
+			sprintf_s(new_spacer, strlen(spacer) + 4, "%s\t\t", spacer);
+
+			for (DWORD i = 0; i < ((TdfList *)pTdf)->getValues<std::vector<Tdf*>>().size(); ++i)
+			{
+				printf("%s\tEntry %i:\n", spacer, i + 1);
+
+				for (DWORD j = 0; j < ((TdfList *)pTdf)->getValues<std::vector<Tdf*>>()[i].size(); ++j)
+					LogTdf(((TdfList *)pTdf)->getValues<std::vector<Tdf*>>()[i][j], new_spacer);
+			}
+
+			delete[] new_spacer;
+			break;
+		}
+		default:
+			break;
+		}
+		break;
+	}
 	case TDF_DOUBLE_LIST:
 	{
-		printf("TODO..\n");
+		switch (((TdfDoubleList *)pTdf)->getSubType1())
+		{
+		case TDF_INTEGER_1:
+		case TDF_INTEGER_2:
+		case TDF_INTEGER_3:
+		{
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues1<DWORD>().size(); ++i)
+				if (i == ((TdfDoubleList *)pTdf)->getValues1<DWORD>().size() - 1)
+					printf("0x%X\n", ((TdfDoubleList *)pTdf)->getValues1<DWORD>()[i]);
+				else
+					printf("0x%X, ", ((TdfDoubleList *)pTdf)->getValues1<DWORD>()[i]);
+
+			break;
+		}
+		case TDF_STRING:
+		{
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues1<char*>().size(); ++i)
+				if (i == ((TdfDoubleList *)pTdf)->getValues1<char*>().size() - 1)
+					printf("%s\n", ((TdfDoubleList *)pTdf)->getValues1<char*>()[i]);
+				else
+					printf("%s, ", ((TdfDoubleList *)pTdf)->getValues1<char*>()[i]);
+
+			break;
+		}
+		case TDF_STRUCT:
+		{
+			printf("\n");
+
+			char* new_spacer = new char[strlen(spacer) + 4];
+			sprintf_s(new_spacer, strlen(spacer) + 4, "%s\t\t", spacer);
+
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>>().size(); ++i)
+			{
+				printf("%s\tEntry %i:\n", spacer, i + 1);
+
+				for (DWORD j = 0; j < ((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>>()[i].size(); ++j)
+					LogTdf(((TdfDoubleList *)pTdf)->getValues1<std::vector<Tdf*>>()[i][j], new_spacer);
+			}
+
+			delete[] new_spacer;
+			break;
+		}
+		default:
+			break;
+		}
+		switch (((TdfDoubleList *)pTdf)->getSubType2())
+		{
+		case TDF_INTEGER_1:
+		case TDF_INTEGER_2:
+		case TDF_INTEGER_3:
+		{
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues2<DWORD>().size(); ++i)
+				if (i == ((TdfDoubleList *)pTdf)->getValues2<DWORD>().size() - 1)
+					printf("0x%X\n", ((TdfDoubleList *)pTdf)->getValues2<DWORD>()[i]);
+				else
+					printf("0x%X, ", ((TdfDoubleList *)pTdf)->getValues2<DWORD>()[i]);
+
+			break;
+		}
+		case TDF_STRING:
+		{
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues2<char*>().size(); ++i)
+				if (i == ((TdfDoubleList *)pTdf)->getValues2<char*>().size() - 1)
+					printf("%s\n", ((TdfDoubleList *)pTdf)->getValues2<char*>()[i]);
+				else
+					printf("%s, ", ((TdfDoubleList *)pTdf)->getValues2<char*>()[i]);
+
+			break;
+		}
+		case TDF_STRUCT:
+		{
+			printf("\n");
+
+			char* new_spacer = new char[strlen(spacer) + 4];
+			sprintf_s(new_spacer, strlen(spacer) + 4, "%s\t\t", spacer);
+
+			for (DWORD i = 0; i < ((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>>().size(); ++i)
+			{
+				printf("%s\tEntry %i:\n", spacer, i + 1);
+
+				for (DWORD j = 0; j < ((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>>()[i].size(); ++j)
+					LogTdf(((TdfDoubleList *)pTdf)->getValues2<std::vector<Tdf*>>()[i][j], new_spacer);
+			}
+
+			delete[] new_spacer;
+			break;
+		}
+		default:
+			break;
+		}
 		break;
 	}
 	case TDF_INTEGER_LIST:
@@ -214,7 +351,65 @@ protected:
 	{
 		printf("client connected! %s:%i\n", getClientIP(cid), getClientPort(cid));
 
-		m_blaseClients[cid] = new BlazeClient("gosredirector.ea.com", 42127);
+		//m_blaseClients[cid] = new BlazeClient("gosredirector.ea.com", 42127);
+		m_blaseClients[cid] = new BlazeClient("192.168.1.246", 42127);
+		m_blaseClients[cid]->cid = cid;
+	}
+
+	void OnClientDisconnect(DWORD cid)
+	{
+		printf("client disconnected! %s:%i\n", getClientIP(cid), getClientPort(cid));
+
+		delete m_blaseClients[cid];
+	}
+
+	void OnClientSendData(DWORD cid, void* data, DWORD datasize)
+	{
+		printf("Client sent data! (len: %i)\n", datasize);
+
+		hexDump(data, datasize);
+		LogBlasePacket(data, datasize);
+
+		m_blaseClients[cid]->SendData(data, datasize);
+	}
+};
+
+TCPServer* g_MasterServer = nullptr;
+
+class MasterClient : public TCPClient
+{
+public:
+	MasterClient(const char* hostname, WORD port) : TCPClient(hostname, port) { }
+	virtual ~MasterClient() { }
+
+protected:
+	virtual void OnServerSendData(void* data, DWORD datasize)
+	{
+		printf("Server sent data! (len: %i)\n", datasize);
+
+		hexDump(data, datasize);
+		LogBlasePacket(data, datasize);
+
+		g_MasterServer->SendClientData(cid, data, datasize);
+	}
+
+public:
+	DWORD cid = 0;
+};
+
+class MasterServer : public TCPServer
+{
+	std::unordered_map<DWORD, MasterClient*> m_blaseClients;
+
+public:
+	MasterServer(WORD port) : TCPServer(port) { }
+
+protected:
+	void OnClientConnect(DWORD cid)
+	{
+		printf("client connected! %s:%i\n", getClientIP(cid), getClientPort(cid));
+
+		m_blaseClients[cid] = new MasterClient("192.168.1.246", 42129);
 		m_blaseClients[cid]->cid = cid;
 	}
 
@@ -246,7 +441,11 @@ int main(int argc, char* argv[])
 
 	g_BlazeServer = new BlazeServer(42127);
 
+	g_MasterServer = new MasterServer(42129);
+
 	while (true); //main loop
+
+	delete g_MasterServer;
 
 	delete g_BlazeServer;
 

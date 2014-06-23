@@ -33,13 +33,6 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
 	ret->m_type = (TdfTypes)Header->Type;
 
-
-
-
-
-
-
-
 	ret->m_subType = (TdfTypes)*((BYTE *)buffer + offset); ++offset;
 	DWORD count = (DWORD)ret->DecompressInteger(buffer, &offset);
 	for (DWORD i = 0; i < count; i++)
@@ -50,10 +43,7 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 		case TDF_INTEGER_2:
 		case TDF_INTEGER_3:
 		{
-			if (i == count - 1)
-				printf("%X", ret->DecompressInteger(buffer, &offset));
-			else
-				printf("%X, ", ret->DecompressInteger(buffer, &offset));
+			ret->m_values_int.push_back(ret->DecompressInteger(buffer, &offset));
 			break;
 		}
 		case TDF_STRING:
@@ -64,44 +54,31 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 			memcpy(buf, (BYTE *)buffer + offset, len);
 			offset += len;
 
-			if (i == count - 1)
-				printf("%s (len: %i)", buf, len);
-			else
-				printf("%s (len: %i), ", buf, len);
-
-			delete[] buf;
+			ret->m_values_string.push_back(buf);
 			break;
 		}
 		case TDF_STRUCT:
 		{
+			std::vector<Tdf*> vec;
+
 			while (*((BYTE *)buffer + offset) != 0)
 			{
 				if (*((BYTE *)buffer + offset) == 2) //WTF?!
 					++offset;
 
 				DWORD len = 0;
-
-				Tdf::fromMemory((BYTE *)buffer + offset, &len);
-
+				vec.push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
 				offset += len;
 			}
 			++offset;
+
+			ret->m_values_struct.push_back(vec);
 			break;
 		}
 		default:
 			printf("Unsupported subType: %i\n", ret->m_subType);
 		}
 	}
-
-
-
-
-
-
-
-
-
-
 
 	if (size)
 		*size = offset;

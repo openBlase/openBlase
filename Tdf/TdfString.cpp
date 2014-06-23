@@ -20,7 +20,8 @@ TdfString::TdfString(DWORD Label, TdfTypes Type, const char* Value) : Tdf()
 
 TdfString::~TdfString()
 {
-
+	if (m_value)
+		delete [] m_value;
 }
 
 TdfString* TdfString::fromMemory(void* buffer, DWORD * size)
