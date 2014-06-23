@@ -22,9 +22,9 @@ TdfIntegerList::~TdfIntegerList()
 
 }
 
-TdfIntegerList* TdfIntegerList::fromMemory(void* buffer, DWORD * size)
+TdfIntegerList* TdfIntegerList::fromPacket(BlazeInStream* stream)
 {
-	DWORD offset = 0;
+	/*DWORD offset = 0;
 
 	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
 
@@ -40,10 +40,12 @@ TdfIntegerList* TdfIntegerList::fromMemory(void* buffer, DWORD * size)
 	if (size)
 		*size = offset;
 
-	return ret;
+	return ret;*/
+
+	return nullptr;
 }
 
-DWORD TdfIntegerList::toMemory(void* buffer, DWORD size)
+DWORD TdfIntegerList::toPacket(void* buffer, DWORD size)
 {
 	return 0;
 }

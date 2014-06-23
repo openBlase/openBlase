@@ -13,9 +13,9 @@ public:
 	TdfVector3D(DWORD Label, TdfTypes Type, DWORD* Values);
 	~TdfVector3D();
 
-	static TdfVector3D* fromMemory(void* buffer, DWORD * size = nullptr);
+	static TdfVector3D* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size);
+	virtual DWORD toPacket(void* buffer, DWORD size);
 
 	DWORD* getValues() { return m_values; }
 	void setValues(DWORD* Values) { memcpy(m_values, Values, sizeof(DWORD) * 3); }

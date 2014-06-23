@@ -24,29 +24,24 @@ TdfString::~TdfString()
 		delete [] m_value;
 }
 
-TdfString* TdfString::fromMemory(void* buffer, DWORD * size)
+TdfString* TdfString::fromPacket(BlazeInStream* stream)
 {
-	DWORD offset = 0;
-
-	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
+	TdfHeader Header = stream->Read<TdfHeader>();
 
 	TdfString* ret = new TdfString();
 
-	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
-	ret->m_type = (TdfTypes)Header->Type;
-	DWORD len = (DWORD)ret->DecompressInteger(buffer, &offset);
+	ret->m_label = ret->DecompressLabel(Header.CompressedLabel);
+	ret->m_type = (TdfTypes)Header.Type;
+	DWORD len = stream->ReadCompressedInt();
 
 	ret->m_value = new char[len];
-	memcpy(ret->m_value, (BYTE*)buffer + offset, len);
-	offset += len;
 
-	if (size)
-		*size = offset;
+	memcpy(ret->m_value, stream->ReadP(len), len);
 
 	return ret;
 }
 
-DWORD TdfString::toMemory(void* buffer, DWORD size)
+DWORD TdfString::toPacket(void* buffer, DWORD size)
 {
 	return 0;
 }

@@ -22,9 +22,9 @@ TdfDoubleList::~TdfDoubleList()
 
 }
 
-TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
+TdfDoubleList* TdfDoubleList::fromPacket(BlazeInStream* stream)
 {
-	DWORD offset = 0;
+	/*DWORD offset = 0;
 
 	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
 
@@ -68,7 +68,7 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 					++offset;
 
 				DWORD len = 0;
-				vec->push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
+				vec->push_back(Tdf::fromPacket((BYTE *)buffer + offset, &len));
 				offset += len;
 			}
 			++offset;
@@ -110,7 +110,7 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 					++offset;
 
 				DWORD len = 0;
-				vec->push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
+				vec->push_back(Tdf::fromPacket((BYTE *)buffer + offset, &len));
 				offset += len;
 			}
 			++offset;
@@ -126,10 +126,12 @@ TdfDoubleList* TdfDoubleList::fromMemory(void* buffer, DWORD * size)
 	if (size)
 		*size = offset;
 
-	return ret;
+	return ret;*/
+
+	return nullptr;
 }
 
-DWORD TdfDoubleList::toMemory(void* buffer, DWORD size)
+DWORD TdfDoubleList::toPacket(void* buffer, DWORD size)
 {
 	return 0;
 }

@@ -15,9 +15,9 @@ public:
 	TdfIntegerList(DWORD Label, TdfTypes Type, std::vector<DWORD> Values);
 	~TdfIntegerList();
 
-	static TdfIntegerList* fromMemory(void* buffer, DWORD * size = nullptr);
+	static TdfIntegerList* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size);
+	virtual DWORD toPacket(void* buffer, DWORD size);
 
 	std::vector<DWORD> getValues() { return m_values; }
 	void setValues(std::vector<DWORD> Values) { m_values = Values; }

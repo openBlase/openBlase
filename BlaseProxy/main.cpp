@@ -222,7 +222,7 @@ struct BlazePacketHeader
 	WORD extLength;
 };
 
-void hexDump(void *addr, int len)
+/*void hexDump(void *addr, int len)
 {
 	int i;
 	unsigned char buff[17];
@@ -254,9 +254,9 @@ void hexDump(void *addr, int len)
 	}
 
 	printf("  %s\n", buff);
-}
+}*/
 
-void LogBlasePacket(void* data, DWORD datasize)
+/*void LogBlasePacket(void* data, DWORD datasize)
 {
 	if (datasize < sizeof(WORD) * 6)
 	{
@@ -305,7 +305,7 @@ void LogBlasePacket(void* data, DWORD datasize)
 	{
 		DWORD offset2 = 0;
 
-		Tdf* pTdf = Tdf::fromMemory((BYTE*)pTdfs + offset, &offset2);
+		Tdf* pTdf = Tdf::fromPacket((BYTE*)pTdfs + offset, &offset2);
 
 		if (!pTdf)
 			break;
@@ -313,6 +313,55 @@ void LogBlasePacket(void* data, DWORD datasize)
 		LogTdf(pTdf);
 
 		offset += offset2;
+	}
+}*/
+
+void LogBlasePacket(BlazeInStream* stream)
+{
+	if (stream->size() < sizeof(WORD) * 6)
+	{
+		printf("LogBlasePacket - Packet too small!\n");
+		return;
+	}
+
+	BlazePacketHeader BPH;
+	memset(&BPH, 0, sizeof(BlazePacketHeader));
+
+	BPH.Length = _byteswap_ushort(stream->Read<WORD>());
+	BPH.Component = _byteswap_ushort(stream->Read<WORD>());
+	BPH.Command = _byteswap_ushort(stream->Read<WORD>());
+	BPH.Error = _byteswap_ushort(stream->Read<WORD>());
+	BPH.QType = _byteswap_ushort(stream->Read<WORD>());
+	BPH.ID = _byteswap_ushort(stream->Read<WORD>());
+	if ((BPH.QType & 0x10) == 0)
+		BPH.extLength = 0;
+	else
+	{
+		BPH.extLength = _byteswap_ushort(stream->Read<WORD>());
+	}
+
+	DWORD len = BPH.Length + (BPH.extLength << 16);
+
+	printf("Length: %i\n", BPH.Length);
+	printf("Component: %i\n", BPH.Component);
+	printf("Command: %i\n", BPH.Command);
+	printf("Error: %i\n", BPH.Error);
+	printf("QType: %i\n", BPH.QType);
+	printf("ID: %i\n", BPH.ID);
+	printf("extLength: %i\n", BPH.extLength);
+	printf("len: %i\n", len);
+	printf("Tdfs:\n");
+
+	DWORD start = stream->tell();
+
+	while (stream->tell() - start < len)
+	{
+		Tdf* pTdf = Tdf::fromPacket(stream);
+
+		if (!pTdf)
+			break;
+
+		LogTdf(pTdf);
 	}
 }
 
@@ -329,8 +378,12 @@ protected:
 	{
 		printf("Server sent data! (len: %i)\n", datasize);
 
-		hexDump(data, datasize);
-		LogBlasePacket(data, datasize);
+		//hexDump(data, datasize);
+		//LogBlasePacket(data, datasize);
+
+		BlazeInStream stream(data, datasize);
+
+		LogBlasePacket(&stream);
 
 		g_BlazeServer->SendClientData(cid, data, datasize);
 	}
@@ -367,8 +420,12 @@ protected:
 	{
 		printf("Client sent data! (len: %i)\n", datasize);
 
-		hexDump(data, datasize);
-		LogBlasePacket(data, datasize);
+		//hexDump(data, datasize);
+		//LogBlasePacket(data, datasize);
+
+		BlazeInStream stream(data, datasize);
+
+		LogBlasePacket(&stream);
 
 		m_blaseClients[cid]->SendData(data, datasize);
 	}
@@ -387,8 +444,12 @@ protected:
 	{
 		printf("Server sent data! (len: %i)\n", datasize);
 
-		hexDump(data, datasize);
-		LogBlasePacket(data, datasize);
+		//hexDump(data, datasize);
+		//LogBlasePacket(data, datasize);
+
+		BlazeInStream stream(data, datasize);
+
+		LogBlasePacket(&stream);
 
 		g_MasterServer->SendClientData(cid, data, datasize);
 	}
@@ -424,8 +485,12 @@ protected:
 	{
 		printf("Client sent data! (len: %i)\n", datasize);
 
-		hexDump(data, datasize);
-		LogBlasePacket(data, datasize);
+		//hexDump(data, datasize);
+		//LogBlasePacket(data, datasize);
+
+		BlazeInStream stream(data, datasize);
+
+		LogBlasePacket(&stream);
 
 		m_blaseClients[cid]->SendData(data, datasize);
 	}
@@ -433,6 +498,8 @@ protected:
 
 int main(int argc, char* argv[])
 {
+	//freopen("stdout.log", "w", stdout);
+
 	WSADATA wsadata;
 	int startres = WSAStartup(MAKEWORD(2, 2), &wsadata);
 	assert(startres == 0);
@@ -441,7 +508,7 @@ int main(int argc, char* argv[])
 
 	g_BlazeServer = new BlazeServer(42127);
 
-	g_MasterServer = new MasterServer(42129);
+	//g_MasterServer = new MasterServer(42129);
 
 	while (true); //main loop
 

@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlazeInStream.hpp" />
     <ClInclude Include="Tdf.h" />
     <ClInclude Include="TdfDoubleList.h" />
     <ClInclude Include="TdfInteger.h" />

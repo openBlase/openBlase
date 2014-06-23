@@ -42,6 +42,9 @@
     <ClInclude Include="TdfVector2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BlazeInStream.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tdf.cpp">

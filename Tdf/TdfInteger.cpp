@@ -22,25 +22,20 @@ TdfInteger::~TdfInteger()
 
 }
 
-TdfInteger* TdfInteger::fromMemory(void* buffer, DWORD * size)
+TdfInteger* TdfInteger::fromPacket(BlazeInStream* stream)
 {
-	DWORD offset = 0;
-
-	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
+	TdfHeader Header = stream->Read<TdfHeader>();
 
 	TdfInteger* ret = new TdfInteger();
 
-	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
-	ret->m_type = (TdfTypes) Header->Type;
-	ret->m_value = ret->DecompressInteger(buffer, &offset);
-
-	if (size)
-		*size = offset;
+	ret->m_label = ret->DecompressLabel(Header.CompressedLabel);
+	ret->m_type = (TdfTypes) Header.Type;
+	ret->m_value = stream->ReadCompressedInt();
 
 	return ret;
 }
 
-DWORD TdfInteger::toMemory(void* buffer, DWORD size)
+DWORD TdfInteger::toPacket(void* buffer, DWORD size)
 {
 	return 0;
 }

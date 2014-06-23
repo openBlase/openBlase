@@ -14,30 +14,30 @@ Tdf::~Tdf()
 
 }
 
-Tdf* Tdf::fromMemory(void* buffer, DWORD * size)
+Tdf* Tdf::fromPacket(BlazeInStream* stream)
 {
-	TdfHeader* Header = (TdfHeader *)buffer;
+	TdfHeader* Header = (TdfHeader *)stream->ReadP(0); //HACK
 
 	switch (Header->Type)
 	{
 	case TDF_INTEGER_1:
 	case TDF_INTEGER_2:
 	case TDF_INTEGER_3:
-		return TdfInteger::fromMemory(buffer, size);
+		return TdfInteger::fromPacket(stream);
 	case TDF_STRING:
-		return TdfString::fromMemory(buffer, size);
+		return TdfString::fromPacket(stream);
 	case TDF_STRUCT:
-		return TdfStruct::fromMemory(buffer, size);
-	case TDF_LIST:
-		return TdfList::fromMemory(buffer, size);
+		return TdfStruct::fromPacket(stream);
+	/*case TDF_LIST:
+		return TdfList::fromPacket(buffer, size);
 	case TDF_DOUBLE_LIST:
-		return TdfDoubleList::fromMemory(buffer, size);
+		return TdfDoubleList::fromPacket(buffer, size);
 	case TDF_INTEGER_LIST:
-		return TdfIntegerList::fromMemory(buffer, size);
+		return TdfIntegerList::fromPacket(buffer, size);
 	case TDF_VECTOR2D:
-		return TdfVector2D::fromMemory(buffer, size);
+		return TdfVector2D::fromPacket(buffer, size);
 	case TDF_VECTOR3D:
-		return TdfVector3D::fromMemory(buffer, size);
+		return TdfVector3D::fromPacket(buffer, size);*/
 	default:
 		printf("Unsupported type: %i\n", Header->Type);
 	}

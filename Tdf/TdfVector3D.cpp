@@ -22,9 +22,9 @@ TdfVector3D::~TdfVector3D()
 
 }
 
-TdfVector3D* TdfVector3D::fromMemory(void* buffer, DWORD * size)
+TdfVector3D* TdfVector3D::fromPacket(BlazeInStream* stream)
 {
-	DWORD offset = 0;
+	/*DWORD offset = 0;
 
 	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
 
@@ -39,10 +39,12 @@ TdfVector3D* TdfVector3D::fromMemory(void* buffer, DWORD * size)
 	if (size)
 		*size = offset;
 
-	return ret;
+	return ret;*/
+
+	return nullptr;
 }
 
-DWORD TdfVector3D::toMemory(void* buffer, DWORD size)
+DWORD TdfVector3D::toPacket(void* buffer, DWORD size)
 {
 	return 0;
 }

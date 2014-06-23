@@ -1,6 +1,8 @@
 #ifndef TDF_H
 #define TDF_H
 
+#include "BlazeInStream.hpp"
+
 enum TdfTypes : BYTE
 {
 	TDF_INTEGER_1,
@@ -39,9 +41,9 @@ public:
 	Tdf();
 	virtual ~Tdf();
 
-	static Tdf* fromMemory(void* buffer, DWORD * size = nullptr);
+	static Tdf* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size) = 0;
+	virtual DWORD toPacket(void* buffer, DWORD size) = 0;
 
 	virtual DWORD getLabel() { return m_label; }
 	virtual void setLabel(DWORD Label) { m_label = Label; }

@@ -22,35 +22,28 @@ TdfStruct::~TdfStruct()
 
 }
 
-TdfStruct* TdfStruct::fromMemory(void* buffer, DWORD * size)
+TdfStruct* TdfStruct::fromPacket(BlazeInStream* stream)
 {
-	DWORD offset = 0;
-
-	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
+	TdfHeader Header = stream->Read<TdfHeader>();
 
 	TdfStruct* ret = new TdfStruct();
 
-	ret->m_label = ret->DecompressLabel(Header->CompressedLabel);
-	ret->m_type = (TdfTypes)Header->Type;
+	ret->m_label = ret->DecompressLabel(Header.CompressedLabel);
+	ret->m_type = (TdfTypes)Header.Type;
 
-	while (*((BYTE *)buffer + offset) != 0)
+	while (stream->Read<BYTE>() != 0)
 	{
-		if (*((BYTE *)buffer + offset) == 2) //WTF?!
-			++offset;
+		stream->seek(1, SEEK_BACK);
+		if (stream->Read<BYTE>() != 2) //WTF?!
+			stream->seek(1, SEEK_BACK);
 
-		DWORD len = 0;
-		ret->m_values.push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
-		offset += len;
+		ret->m_values.push_back(Tdf::fromPacket(stream));
 	}
-	++offset;
-
-	if (size)
-		*size = offset;
 
 	return ret;
 }
 
-DWORD TdfStruct::toMemory(void* buffer, DWORD size)
+DWORD TdfStruct::toPacket(void* buffer, DWORD size)
 {
 	return 0;
 }

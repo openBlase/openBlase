@@ -16,9 +16,9 @@ public:
 	TdfList(DWORD Label, TdfTypes Type, std::vector<Tdf*> Values);
 	~TdfList();
 
-	static TdfList* fromMemory(void* buffer, DWORD * size = nullptr);
+	static TdfList* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size);
+	virtual DWORD toPacket(void* buffer, DWORD size);
 
 	virtual TdfTypes getSubType() { return m_subType; }
 	virtual void setSubType(TdfTypes SubType) { m_subType = SubType; }

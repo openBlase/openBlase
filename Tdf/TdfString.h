@@ -13,9 +13,9 @@ public:
 	TdfString(DWORD Label, TdfTypes Type, const char* Value);
 	~TdfString();
 
-	static TdfString* fromMemory(void* buffer, DWORD * size = nullptr);
+	static TdfString* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size);
+	virtual DWORD toPacket(void* buffer, DWORD size);
 
 	char* getValue() { return m_value; }
 	void setValue(const char* Value)

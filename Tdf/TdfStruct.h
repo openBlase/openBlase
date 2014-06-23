@@ -15,9 +15,9 @@ public:
 	TdfStruct(DWORD Label, TdfTypes Type, std::vector<Tdf*> Values);
 	~TdfStruct();
 
-	static TdfStruct* fromMemory(void* buffer, DWORD * size = nullptr);
+	static TdfStruct* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size);
+	virtual DWORD toPacket(void* buffer, DWORD size);
 
 	std::vector<Tdf*> getValues() { return m_values; }
 	//void setValues(const char* Value) { }

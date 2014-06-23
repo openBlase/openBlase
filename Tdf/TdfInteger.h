@@ -13,9 +13,9 @@ public:
 	TdfInteger(DWORD Label, TdfTypes Type, DWORD Value);
 	~TdfInteger();
 
-	static TdfInteger* fromMemory(void* buffer, DWORD * size = nullptr);
+	static TdfInteger* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size);
+	virtual DWORD toPacket(void* buffer, DWORD size);
 
 	DWORD getValue() { return m_value; }
 	void setValue(DWORD Value) { m_value = Value; }

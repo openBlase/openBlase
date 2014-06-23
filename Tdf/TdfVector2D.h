@@ -13,9 +13,9 @@ public:
 	TdfVector2D(DWORD Label, TdfTypes Type, DWORD* Values);
 	~TdfVector2D();
 
-	static TdfVector2D* fromMemory(void* buffer, DWORD * size = nullptr);
+	static TdfVector2D* fromPacket(BlazeInStream* stream);
 
-	virtual DWORD toMemory(void* buffer, DWORD size);
+	virtual DWORD toPacket(void* buffer, DWORD size);
 
 	DWORD* getValues() { return m_values; }
 	void setValues(DWORD* Values) { memcpy(m_values, Values, sizeof(DWORD) * 2); }

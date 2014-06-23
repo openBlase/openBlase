@@ -22,9 +22,9 @@ TdfList::~TdfList()
 
 }
 
-TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
+TdfList* TdfList::fromPacket(BlazeInStream* stream)
 {
-	DWORD offset = 0;
+	/*DWORD offset = 0;
 
 	TdfHeader* Header = (TdfHeader *)buffer; offset += sizeof(TdfHeader);
 
@@ -67,7 +67,7 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 					++offset;
 
 				DWORD len = 0;
-				vec->push_back(Tdf::fromMemory((BYTE *)buffer + offset, &len));
+				vec->push_back(Tdf::fromPacket((BYTE *)buffer + offset, &len));
 				offset += len;
 			}
 			++offset;
@@ -83,10 +83,12 @@ TdfList* TdfList::fromMemory(void* buffer, DWORD * size)
 	if (size)
 		*size = offset;
 
-	return ret;
+	return ret;*/
+
+	return nullptr;
 }
 
-DWORD TdfList::toMemory(void* buffer, DWORD size)
+DWORD TdfList::toPacket(void* buffer, DWORD size)
 {
 	return 0;
 }
